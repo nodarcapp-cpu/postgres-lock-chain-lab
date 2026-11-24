@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: lab
+      POSTGRES_PASSWORD: lab-only-password
+      POSTGRES_DB: locklab
+    volumes:
+      - ./sql/01-setup.sql:/docker-entrypoint-initdb.d/01-setup.sql:ro
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U lab -d locklab"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+volumes:
+  pgdata:
